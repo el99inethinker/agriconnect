@@ -4,7 +4,7 @@ import {supabase} from '../../lib/supabaseClient'
 export default function AddListingPage(){
     const[form, setForm]=useState({
         name: '', commodity:'', form:'', location:'', 
-        capacity_mt:'', cadence:'', moisture:'', cert:'', port:''
+        capacity_mt:'', cadence:'', moisture:'', cert:'', port:'', contact:''
     })
     const [status, setStatus]=useState(null)
     function handleChange(e){
@@ -12,6 +12,10 @@ export default function AddListingPage(){
     }
     async function handleSubmit(e){
         e.preventDefault()
+        if(!form.name|| !form.commodity|| !form.contact) {
+            setStatus('Please fill in at least your name, commodity, and phone/WhatsApp contact.')
+            return
+        }
         setStatus('saving')
         const{error}= await supabase.from('listings').insert([{
             ...form,
@@ -22,12 +26,15 @@ export default function AddListingPage(){
             setStatus('error:' + error.message)
         }else{
             setStatus('saved!')
-            setForm({name:'', commodity:'', form:'', location:'', capacity_mt:'', cadence:'', moisture:'', cert:'', port:''})
+            setForm({name:'', commodity:'', form:'', location:'', capacity_mt:'', cadence:'', moisture:'', cert:'', port:'', contact:''})
         }
     }
     return(
         <div style={{ maxWidth: 500, margin: '0 auto', padding: 40, fontFamily: 'Arial, sans-serif' }}>
             <h1 style={{fontSize: 26, marginBottom: 20 }}>Add Your Supply</h1>
+            <p style={{fontSize: 13, color: '#888', marginBottom: 16}}>
+                Your details, including your phone/WhatsApp number, will be visible to anyone using this site.
+                </p>
             <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: 10}}>
                 <input name="name" placeholder="Farm/network name" value={form.name} onChange={handleChange} style={inputStyle} />
                 <input name="commodity" placeholder="Commodity (e.g. Cassava)" value={form.commodity} onChange={handleChange} style={inputStyle} />
@@ -38,6 +45,7 @@ export default function AddListingPage(){
                 <input name="moisture" placeholder="Moisture spec (optional)" value={form.moisture} onChange={handleChange} style={inputStyle} />
                 <input name="cert" placeholder="Certification (optional)"value={form.cert} onChange={handleChange} style={inputStyle} />
                 <input name="port" placeholder="Nearest port" value={form.port} onChange={handleChange} style={inputStyle} />
+                <input name="contact" placeholder="Phone/WhatsApp number" value={form.contact} onChange={handleChange} style={inputStyle} />
                 <button type="submit" style={buttonStyle}>Save Listing</button>
                 </form>
                 {status && <p style={{ marginTop: 16 }}>{status}</p>}

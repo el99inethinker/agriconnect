@@ -61,6 +61,7 @@ export default function Homepage(){
             <p style={{ margin: '2px 0'}}><b>Capacity:</b>{item.capacity_mt} MT,{item.cadence}</p>
             <p style={{ margin: '2px 0'}}><b>Certification:</b>{item.cert}</p>
             <p style={{ margin: '2px 0'}}><b>Ships from:</b>{item.port}</p>
+            <p style={{ margin: '2px 0'}}><b>Contacts:</b>{item.contact}</p>
             </div>
         ))}
         </div>
